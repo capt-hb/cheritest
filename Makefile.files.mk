@@ -4,18 +4,19 @@
 # List of directories in which to find test source and .py files.
 #
 TESTDIR=tests
-TESTDIRS=					\
-		$(TESTDIR)/framework		\
-		$(TESTDIR)/alu			\
-		$(TESTDIR)/branch		\
-		$(TESTDIR)/tlb			\
-		$(TESTDIR)/mem			\
-		$(TESTDIR)/cache		\
-		$(TESTDIR)/cp0			\
-		$(TESTDIR)/cp2			\
-		$(TESTDIR)/mt			\
-		$(TESTDIR)/pic			\
-		$(TESTDIR)/dma
+TESTDIRS=					      \
+		$(TESTDIR)/framework		      \
+		$(TESTDIR)/alu			      \
+		$(TESTDIR)/branch		      \
+		$(TESTDIR)/tlb			      \
+		$(TESTDIR)/mem			      \
+		$(TESTDIR)/cache		      \
+		$(TESTDIR)/cp0			      \
+		$(TESTDIR)/cp2			      \
+		$(TESTDIR)/mt			      \
+		$(TESTDIR)/pic			      \
+		$(TESTDIR)/dma                        \
+		$(TESTDIR)/uninitialized_capabilities
 
 CLANG_TESTDIRS=$(TESTDIR)/cframework $(TESTDIR)/c
 PURECAP_TESTDIRS=$(TESTDIR)/purecap
@@ -703,6 +704,8 @@ TEST_TRAPI_FILES=				\
 
 TEST_PIC_FILES=test_pic_irq.s
 
+TEST_UNINIT_FILES=test_uninit.s			
+
 TEST_PURECAP_FILES=
 # Don't attempt to build clang tests unless CLANG is set to 1, because clang might not be available
 # This will cause clang tests to fail but that is better than make falling over.
@@ -862,8 +865,8 @@ TEST_FILES=					\
 		$(TEST_CLANG_FILES)		\
 		$(TEST_MULTICORE_FILES)		\
 		$(TEST_MT_FILES)		\
-		$(TEST_PIC_FILES)
-
+		$(TEST_PIC_FILES)               \
+		$(TEST_UNINIT_FILES)              
 
 ifeq ($(TEST_FPU),1)
 TEST_FILES+=	$(RAW_FPU_FILES) $(TEST_FPU_FILES)

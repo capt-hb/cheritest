@@ -483,6 +483,8 @@ class MipsStatus(object):
         # reserved = 0x1d
         # reserved = 0x1e
         # reserved = 0x1f
+        Uninit_Violation = 0x20
+        Uninit_Load_Violation = 0x21
 
         @staticmethod
         def fromint(value):

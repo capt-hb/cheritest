@@ -79,7 +79,7 @@ CAPMIPS_CORE_RE=FasterRegex('DEBUG CAP COREID', r'\s+([0-9]+)$')
 
 CAPREG_DUMP_REGEX = r't:([01])\s+[su]:([01]) perms:(0x' + hdigit + '+) type:(0x' + \
                      hdigit + '+) offset:(0x' + hdigit + '{16}) base:(0x' + \
-                     hdigit + '{16}) length:(0x' + hdigit + '{16})'
+                     hdigit + '{16}) length:(0x' + hdigit + '{16}) uninit:([01])'
 CAPMIPS_PC_RE = FasterRegex('DEBUG CAP PCC', r'\s+' + CAPREG_DUMP_REGEX + '$')
 CAPMIPS_REG_RE = FasterRegex('DEBUG CAP REG', r'\s+([0-9]+)\s+' + CAPREG_DUMP_REGEX + '$')
 CAPMIPS_HWREG_RE = FasterRegex('DEBUG CAP HWREG', r'\s+(\d+)\s+(\(\w+\))?\s*' + CAPREG_DUMP_REGEX + '$')
@@ -102,7 +102,7 @@ class HexInt(int):
 
 
 class Capability(object):
-    def __init__(self, t, s, perms, ctype, offset, base, length):
+    def __init__(self, t, s, perms, ctype, offset, base, length, uninit):
         self.t      = t
         self.s      = s
         self.ctype  = ctype
@@ -110,6 +110,7 @@ class Capability(object):
         self.offset = HexInt(offset)
         self.base   = HexInt(base)
         self.length = HexInt(length)
+        self.uninit = uninit
 
     @property
     def address(self):
@@ -117,16 +118,17 @@ class Capability(object):
         return HexInt((self.offset + self.base) & 0xffffffffffffffff)
 
     def __repr__(self):
-        return '<t:%x s:%x perms:0x%08x type:0x%06x offset:0x%016x base:0x%016x length:0x%016x>'%(
-            self.t, self.s, self.perms, self.ctype, self.offset, self.base, self.length)
+        return '<t:%x s:%x perms:0x%08x type:0x%06x offset:0x%016x base:0x%016x length:0x%016x uninit:%x>'%(
+            self.t, self.s, self.perms, self.ctype, self.offset, self.base, self.length,
+            self.uninit)
 
     def __eq__(self, other):
         return self.t == other.t and self.s == other.s and \
             self.ctype == other.ctype and self.perms == other.perms and \
             self.offset == other.offset and self.base == other.base and \
-            self.length == other.length
+            self.length == other.length and self.uninit == other.uninit
 
-def capabilityFromStrings(t, s, perms, ctype, offset, base, length):
+def capabilityFromStrings(t, s, perms, ctype, offset, base, length, uninit):
     return Capability(
         int(t),
         int(s),
@@ -135,6 +137,7 @@ def capabilityFromStrings(t, s, perms, ctype, offset, base, length):
         int(offset, 16),
         int(base, 16),
         int(length, 16),
+        int(uninit),
     )
 
 class ThreadStatus(object):
@@ -310,18 +313,18 @@ class MipsStatus(object):
                 if cap_reg_groups:
                     cap_reg_num = int(cap_reg_groups.group(1))
                     t = self.threads[thread]
-                    t.cp2[cap_reg_num] = capabilityFromStrings(*cap_reg_groups.groups()[1:8])
+                    t.cp2[cap_reg_num] = capabilityFromStrings(*cap_reg_groups.groups()[1:9])
                     continue
                 cap_hwreg_groups = CAPMIPS_HWREG_RE.search(line)
                 if cap_hwreg_groups:
                     cap_reg_num = int(cap_hwreg_groups.group(1))
                     t = self.threads[thread]
-                    t.cp2_hwregs[cap_reg_num] = capabilityFromStrings(*cap_hwreg_groups.groups()[2:9])
+                    t.cp2_hwregs[cap_reg_num] = capabilityFromStrings(*cap_hwreg_groups.groups()[2:10])
                     continue
                 cap_pc_groups = CAPMIPS_PC_RE.search(line)
                 if cap_pc_groups:
                     t = self.threads[thread]
-                    t.pcc = capabilityFromStrings(*cap_pc_groups.groups()[0:7])
+                    t.pcc = capabilityFromStrings(*cap_pc_groups.groups()[0:8])
                     continue
 
 

@@ -6,3 +6,6 @@ class test_purecap_uninit_calling_convention(BaseBERITestCase):
 
     def test_result_of_something_is_100(self):
         assert self.MIPS.v0 == 100
+
+    def test_stack_capability_is_uninit_in_doSomething(self):
+        assert self.MIPS.t0 == 1

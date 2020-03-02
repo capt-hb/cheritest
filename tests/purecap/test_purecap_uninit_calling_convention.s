@@ -22,14 +22,15 @@ doSomething:                            # @doSomething
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
-	cincoffset	$c11, $c11, -32
+	cgetuninit $t0, $c11
+	#cincoffset	$c11, $c11, -32
 	.cfi_def_cfa_offset 32
                                         # kill: def $a0 killed $a0 killed $a0_64
-	cincoffset	$c1, $c11, 28
+	cincoffset	$c1, $c11, -4
 	csetbounds	$c1, $c1, 4
-	csw	$4, $zero, 0($c1)
-	clw	$2, $zero, 0($c1)
-	cincoffset	$c11, $c11, 32
+	ucsw	$c1, $4, 0($c1)
+	clw	$2, $zero, -4($c1)
+	#cincoffset	$c11, $c11, 32
 	cjr	$c17
 	nop
 	.set	at
@@ -74,8 +75,11 @@ test:                                   # @test
 	cgetnull	$c13
 	csc	$c3, $zero, 32($c11)    # 32-byte Folded Spill
 	csw	$2, $zero, 28($c11)     # 4-byte Folded Spill
+	cmove $c18, $c11 # tmp: currently store this sp in a register before uninit
+	cuninit $c11, $c11
 	cjalr	$c12, $c17
 	nop
+	cmove $c11, $c18 # tmp: restore old sp
 	clc	$c1, $zero, 32($c11)    # 32-byte Folded Reload
 	csw	$2, $zero, 0($c1)
 	clw	$2, $zero, 0($c1)

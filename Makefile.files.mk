@@ -738,7 +738,8 @@ ifeq ($(PURECAP), 1)
 TEST_PURECAP_C_SRCS:=$(wildcard tests/purecap/test_*.c)
 TEST_PURECAP_CXX_SRCS:=$(wildcard tests/purecap/test_*.cpp)
 TEST_PURECAP_ASM_SRCS:=tests/purecap/test_purecap_reg_init.s \
-			tests/purecap/test_purecap_original_calling_convention.s
+			tests/purecap/test_purecap_original_calling_convention.s \
+			tests/purecap/test_purecap_uninit_calling_convention.s
 TEST_PURECAP_FILES:= $(notdir $(TEST_PURECAP_C_SRCS) $(TEST_PURECAP_ASM_SRCS) $(TEST_PURECAP_CXX_SRCS))
 endif
 

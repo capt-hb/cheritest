@@ -16,15 +16,14 @@ BEGIN_TEST
 
 	cuninit $c1, $c1
 
-	# setting cursor higher should result in error
-	dli $t1, 10
+	# setting cursor lower should result in error
+	dli $t1, 0 
 	csetaddr $c1, $c1, $t1
 
 	dli $t1, 42
 	ucsb $c1, $t1, 0($c1)
 
-	dli $t1, 0
-	csetaddr $c1, $c1, $t1
+	csetaddr $c1, $c1, $t0
 	cgetaddr $a0, $c1
 END_TEST
 

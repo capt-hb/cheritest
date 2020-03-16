@@ -17,7 +17,6 @@ BEGIN_TEST
 	# place cursor at the end of the capability
 	cgetlen $t0, $c1
 	csetoffset $c1, $c1, $t0
-	cincoffsetimm $c1, $c1, -1 # allows storing a byte (needed for instrs below)
 	cuninit $c1, $c1
 
 	dli $t0, -10

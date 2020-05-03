@@ -80,6 +80,10 @@ test:                                   # @test
 	csw	$2, $zero, 0($c1)
 	clw	$2, $zero, 0($c1)
 	clc	$c17, $zero, 96($c11)   # 32-byte Folded Reload
+
+	# Read from callee stack frame
+	clw $t1, $zero, -4($c11)
+
 	cincoffset	$c11, $c11, 128
 	cjr $c17
 	nop

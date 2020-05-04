@@ -29,6 +29,15 @@ doSomething:                            # @doSomething
 	csetbounds	$c1, $c1, 4
 	csw	$4, $zero, 0($c1)
 	clw	$2, $zero, 0($c1)
+
+	# Load capability from caller stack frame
+	clc $c4, $zero, 64($c11)
+	li $t2, 500
+	# Store some value in the memory the cap denotes
+	csw $t2, $zero, 0($c4)
+	# Load it again
+	clw $t3, $zero, 0($c4)
+
 	cincoffset	$c11, $c11, 32
 	cjr	$c17
 	nop

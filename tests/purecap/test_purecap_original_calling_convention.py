@@ -9,3 +9,6 @@ class test_purecap_original_calling_convention(BaseBERITestCase):
 
     def test_can_read_callee_stack_frame(self):
         assert self.MIPS.t1 == 100
+
+    def test_callee_can_write_and_read_caller_stack_frame(self):
+        assert self.MIPS.t3 == 500

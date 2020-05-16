@@ -25,10 +25,9 @@ doSomething:                            # @doSomething
 	cgetuninit $t0, $c11
 	.cfi_def_cfa_offset 32
                                         # kill: def $a0 killed $a0 killed $a0_64
-	cincoffset	$c1, $c11, -4
+	ucsw	$c1, $4, 0($c11)
 	csetbounds	$c1, $c1, 4
-	ucsw	$c1, $4, 0($c1)
-	clw	$2, $zero, -4($c1)
+	clw	$2, $zero, 0($c1)
 	cjr	$c17
 	nop
 	.set	at
@@ -76,9 +75,16 @@ test:                                   # @test
 
 	# Setup uninit sp, set bounds to the size of the next stack frame,
 	# and put the cursor passed the supplied data (arguments, rp, ...)
+	# note that only registers are used here so no argument spilling occurs!
 	cmove $c18, $c11 # tmp: currently store this sp in a register before uninit
-	csetboundsimm $c11, $c11, 32 # 32 is the size of the frame of doSomething
-	cincoffsetimm $c11, $c11, 32 # place cursor passed arguments (so they can be read)
+	cgetbase $s0, $c11
+	cgetlen $s1, $c11
+	csetoffset $c11, $c11, $s1
+	csub $s2, $c11, $c18
+	sub $s3, $s1, $s2
+	csetoffset $c11, $c11, $zero
+	csetbounds $c11, $c11, $s3
+	csetoffset $c11, $c11, $s3
 	cuninit $c11, $c11
 
 	cjalr	$c12, $c17

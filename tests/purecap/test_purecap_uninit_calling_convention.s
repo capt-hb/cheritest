@@ -77,14 +77,7 @@ test:                                   # @test
 	# and put the cursor passed the supplied data (arguments, rp, ...)
 	# note that only registers are used here so no argument spilling occurs!
 	cmove $c18, $c11 # tmp: currently store this sp in a register before uninit
-	cgetbase $s0, $c11
-	cgetlen $s1, $c11
-	csetoffset $c11, $c11, $s1
-	csub $s2, $c11, $c18
-	sub $s3, $s1, $s2
-	csetoffset $c11, $c11, $zero
-	csetbounds $c11, $c11, $s3
-	csetoffset $c11, $c11, $s3
+	cshrink $c11, $c11
 	cuninit $c11, $c11
 
 	cjalr	$c12, $c17

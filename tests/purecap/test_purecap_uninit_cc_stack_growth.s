@@ -22,14 +22,18 @@ g:                                      # @g
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
-	cincoffset	$c11, $c11, -96
+	#cincoffset	$c11, $c11, -96
 	.cfi_def_cfa_offset 96
-	cincoffset	$c1, $c11, 64
-	csetbounds	$c1, $c1, 32
-	cincoffset	$c2, $c11, 32
-	csetbounds	$c2, $c2, 32
-	csc	$c3, $zero, 0($c1)
-	csc	$c4, $zero, 0($c2)
+	#cincoffset	$c1, $c11, 64
+	#csetbounds	$c1, $c1, 32
+	ucsc $c11, $c3, 0($c11)
+	csetbounds	$c1, $c11, 32
+	#cincoffset	$c2, $c11, 32
+	#csetbounds	$c2, $c2, 32
+	ucsc $c11, $c4, 0($c11)
+	csetbounds $c2, $c11, 32
+	#csc	$c3, $zero, 0($c1)
+	#csc	$c4, $zero, 0($c2)
 	clc	$c1, $zero, 0($c1)
 	clw	$1, $zero, 0($c1)
 	clc	$c1, $zero, 0($c2)
@@ -38,7 +42,7 @@ g:                                      # @g
                                         # implicit-def: $v1_64
 	move	$3, $1
 	move	$2, $3
-	cincoffset	$c11, $c11, 96
+	#cincoffset	$c11, $c11, 96
 	cjr	$c17
 	nop
 	.set	at
@@ -64,31 +68,62 @@ f:                                      # @f
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
-	cincoffset	$c11, $c11, -128
+	#cincoffset	$c11, $c11, -128
 	.cfi_def_cfa_offset 128
-	csc	$c17, $zero, 96($c11)   # 32-byte Folded Spill
+	#csc	$c17, $zero, 96($c11)   # 32-byte Folded Spill
+	ucsc	$c11, $c17, 0($c11)   # 32-byte Folded Spill
 	.cfi_offset 89, -32
 	lui	$1, %pcrel_hi(_CHERI_CAPABILITY_TABLE_-8)
 	daddiu	$1, $1, %pcrel_lo(_CHERI_CAPABILITY_TABLE_-4)
 	cgetpccincoffset	$c1, $1
                                         # kill: def $a0 killed $a0 killed $a0_64
-	cincoffset	$c2, $c11, 92
-	csetbounds	$c2, $c2, 4
-	cincoffset	$c3, $c11, 88
-	csetbounds	$c3, $c3, 4
-	csw	$4, $zero, 0($c2)
+	#cincoffset	$c2, $c11, 92
+	#csetbounds	$c2, $c2, 4
+	#csw	$4, $zero, 0($c2)
+
+	ucsw $c11, $4, 0($c11)
+	csetbounds $c2, $c11, 4
+
+	#cincoffset	$c3, $c11, 88
+	#csetbounds	$c3, $c3, 4
 	addiu	$2, $zero, 10
-	csw	$2, $zero, 0($c3)
+	#csw	$2, $zero, 0($c3)
+
+	ucsw	$c11, $2, 0($c11)
+	csetbounds $c3, $c11, 4 # $c3 = &x
+
 	clcbi	$c12, %capcall20(g)($c1)
-	csc	$c3, $zero, 32($c11)    # 32-byte Folded Spill
-	cmove	$c3, $c2
-	clc	$c4, $zero, 32($c11)    # 32-byte Folded Reload
+	#csc	$c3, $zero, 32($c11)    # 32-byte Folded Spill
+	ucsw $c11, $zero, 0($c11)
+	ucsw $c11, $zero, 0($c11)
+	ucsw $c11, $zero, 0($c11)
+	ucsw $c11, $zero, 0($c11)
+	ucsw $c11, $zero, 0($c11)
+	ucsw $c11, $zero, 0($c11)
+	ucsc $c11, $c3, 0($c11)
+
+	cmove	$c3, $c2 # $c3 = &a
+	#clc	$c4, $zero, 32($c11)    # 32-byte Folded Reload
+	clc	$c4, $zero, 0($c11)     # $c4 = &x
 	cgetnull	$c13
+
+	# CC: pre call
+	cmove $c23, $c11
+	cshrink $c11, $c11
+	cuninit $c11, $c11
+
 	cjalr	$c12, $c17
 	nop
+
+	# CC: post call
+	cmove $c11, $c23
+
 	sll	$2, $2, 0
-	clc	$c17, $zero, 96($c11)   # 32-byte Folded Reload
-	cincoffset	$c11, $c11, 128
+	clc	$c17, $zero, 64($c11)   # 32-byte Folded Reload
+
+	#clc $c17, $zero, 96($c11)
+
+	#cincoffset	$c11, $c11, 128
 	cjr	$c17
 	nop
 	.set	at
@@ -114,11 +149,12 @@ tmp:                                    # @tmp
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
-	cincoffset	$c11, $c11, -64
+	#cincoffset	$c11, $c11, -64
 	.cfi_def_cfa_offset 64
-	cld	$1, $zero, 8($c13)
+	# These are the 2 arguments passed on the stack
+	cld	$1, $zero, 8($c11)
                                         # kill: def $at killed $at killed $at_64
-	cld	$2, $zero, 0($c13)
+	cld	$2, $zero, 0($c11)
                                         # kill: def $v0 killed $v0 killed $v0_64
                                         # kill: def $t3 killed $t3 killed $t3_64
                                         # kill: def $t2 killed $t2 killed $t2_64
@@ -128,36 +164,27 @@ tmp:                                    # @tmp
                                         # kill: def $a2 killed $a2 killed $a2_64
                                         # kill: def $a1 killed $a1 killed $a1_64
                                         # kill: def $a0 killed $a0 killed $a0_64
-	cincoffset	$c1, $c11, 60
-	csetbounds	$c1, $c1, 4
-	cincoffset	$c2, $c11, 56
-	csetbounds	$c2, $c2, 4
-	cincoffset	$c3, $c11, 52
-	csetbounds	$c3, $c3, 4
-	cincoffset	$c4, $c11, 48
-	csetbounds	$c4, $c4, 4
-	cincoffset	$c5, $c11, 44
-	csetbounds	$c5, $c5, 4
-	cincoffset	$c6, $c11, 40
-	csetbounds	$c6, $c6, 4
-	cincoffset	$c7, $c11, 36
-	csetbounds	$c7, $c7, 4
-	cincoffset	$c8, $c11, 32
-	csetbounds	$c8, $c8, 4
-	cincoffset	$c9, $c11, 28
-	csetbounds	$c9, $c9, 4
-	cincoffset	$c10, $c11, 24
-	csetbounds	$c10, $c10, 4
-	csw	$4, $zero, 0($c1)
-	csw	$5, $zero, 0($c2)
-	csw	$6, $zero, 0($c3)
-	csw	$7, $zero, 0($c4)
-	csw	$8, $zero, 0($c5)
-	csw	$9, $zero, 0($c6)
-	csw	$10, $zero, 0($c7)
-	csw	$11, $zero, 0($c8)
-	csw	$2, $zero, 0($c9)
-	csw	$1, $zero, 0($c10)
+	ucsw	$c11, $4, 0($c11)
+	csetbounds $c1, $c11, 4
+	ucsw	$c11, $5, 0($c11)
+	csetbounds $c2, $c11, 4
+	ucsw	$c11, $6, 0($c11)
+	csetbounds $c3, $c11, 4
+	ucsw	$c11, $7, 0($c11)
+	csetbounds $c4, $c11, 4
+	ucsw	$c11, $8, 0($c11)
+	csetbounds $c5, $c11, 4
+	ucsw	$c11, $9, 0($c11)
+	csetbounds $c6, $c11, 4
+	ucsw	$c11, $10, 0($c11)
+	csetbounds $c7, $c11, 4
+	ucsw	$c11, $11, 0($c11)
+	csetbounds $c8, $c11, 4
+	ucsw	$c11, $2, 0($c11)
+	csetbounds $c9, $c11, 4
+	ucsw	$c11, $1, 0($c11)
+	csetbounds $c10, $c11, 4
+
 	clw	$1, $zero, 0($c1)
 	clw	$2, $zero, 0($c2)
 	addu	$1, $1, $2
@@ -181,7 +208,7 @@ tmp:                                    # @tmp
 	move	$3, $1
 	move	$2, $3
 	cgetnull	$c13
-	cincoffset	$c11, $c11, 64
+	#cincoffset	$c11, $c11, 64
 	cjr	$c17
 	nop
 	.set	at
@@ -207,50 +234,43 @@ cap_tmp:                                # @cap_tmp
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
-	cincoffset	$c11, $c11, -512
+	#cincoffset	$c11, $c11, -512
 	.cfi_def_cfa_offset 512
-	csc	$c21, $zero, 480($c11)  # 32-byte Folded Spill
-	csc	$c20, $zero, 448($c11)  # 32-byte Folded Spill
-	csc	$c19, $zero, 416($c11)  # 32-byte Folded Spill
-	csc	$c18, $zero, 384($c11)  # 32-byte Folded Spill
-	csc	$c17, $zero, 352($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c21, 0($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c20, 0($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c19, 0($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c18, 0($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c17, 0($c11)  # 32-byte Folded Spill
 	.cfi_offset 93, -32
 	.cfi_offset 92, -64
 	.cfi_offset 91, -96
 	.cfi_offset 90, -128
 	.cfi_offset 89, -160
-	clc	$c1, $zero, 32($c13)
-	clc	$c2, $zero, 0($c13)
-	cincoffset	$c12, $c11, 320
-	csetbounds	$c12, $c12, 32
-	cincoffset	$c13, $c11, 288
-	csetbounds	$c13, $c13, 32
-	cincoffset	$c14, $c11, 256
-	csetbounds	$c14, $c14, 32
-	cincoffset	$c15, $c11, 224
-	csetbounds	$c15, $c15, 32
-	cincoffset	$c16, $c11, 192
-	csetbounds	$c16, $c16, 32
-	cincoffset	$c17, $c11, 160
-	csetbounds	$c17, $c17, 32
-	cincoffset	$c18, $c11, 128
-	csetbounds	$c18, $c18, 32
-	cincoffset	$c19, $c11, 96
-	csetbounds	$c19, $c19, 32
-	cincoffset	$c20, $c11, 64
-	csetbounds	$c20, $c20, 32
-	cincoffset	$c21, $c11, 32
-	csetbounds	$c21, $c21, 32
-	csc	$c3, $zero, 0($c12)
-	csc	$c4, $zero, 0($c13)
-	csc	$c5, $zero, 0($c14)
-	csc	$c6, $zero, 0($c15)
-	csc	$c7, $zero, 0($c16)
-	csc	$c8, $zero, 0($c17)
-	csc	$c9, $zero, 0($c18)
-	csc	$c10, $zero, 0($c19)
-	csc	$c2, $zero, 0($c20)
-	csc	$c1, $zero, 0($c21)
+
+	clc	$c1, $zero, 160($c11)
+	clc	$c2, $zero, 192($c11)
+
+	ucsc	$c11, $c3, 0($c11)
+	csetbounds $c12, $c11, 32
+	ucsc	$c11, $c4, 0($c11)
+	csetbounds $c13, $c11, 32
+	ucsc	$c11, $c5, 0($c11)
+	csetbounds $c14, $c11, 32
+	ucsc	$c11, $c6, 0($c11)
+	csetbounds $c15, $c11, 32
+	ucsc	$c11, $c7, 0($c11)
+	csetbounds $c16, $c11, 32
+	ucsc	$c11, $c8, 0($c11)
+	csetbounds $c17, $c11, 32
+	ucsc	$c11, $c9, 0($c11)
+	csetbounds $c18, $c11, 32
+	ucsc	$c11, $c10, 0($c11)
+	csetbounds $c19, $c11, 32
+	ucsc	$c11, $c2, 0($c11)
+	csetbounds $c20, $c11, 32
+	ucsc	$c11, $c1, 0($c11)
+	csetbounds $c21, $c11, 32
+
 	clc	$c1, $zero, 0($c12)
 	clw	$1, $zero, 0($c1)
 	clc	$c1, $zero, 0($c13)
@@ -284,12 +304,12 @@ cap_tmp:                                # @cap_tmp
 	move	$3, $1
 	move	$2, $3
 	cgetnull	$c13
-	clc	$c17, $zero, 352($c11)  # 32-byte Folded Reload
-	clc	$c18, $zero, 384($c11)  # 32-byte Folded Reload
-	clc	$c19, $zero, 416($c11)  # 32-byte Folded Reload
-	clc	$c20, $zero, 448($c11)  # 32-byte Folded Reload
-	clc	$c21, $zero, 480($c11)  # 32-byte Folded Reload
-	cincoffset	$c11, $c11, 512
+	clc	$c17, $zero, 320($c11)  # 32-byte Folded Reload
+	clc	$c18, $zero, 352($c11)  # 32-byte Folded Reload
+	clc	$c19, $zero, 384($c11)  # 32-byte Folded Reload
+	clc	$c20, $zero, 416($c11)  # 32-byte Folded Reload
+	clc	$c21, $zero, 448($c11)  # 32-byte Folded Reload
+	#cincoffset	$c11, $c11, 512
 	cjr	$c17
 	nop
 	.set	at
@@ -315,11 +335,11 @@ mixed_tmp:                              # @mixed_tmp
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
-	cincoffset	$c11, $c11, -512
+	#cincoffset	$c11, $c11, -512
 	.cfi_def_cfa_offset 512
-	csc	$c19, $zero, 480($c11)  # 32-byte Folded Spill
-	csc	$c18, $zero, 448($c11)  # 32-byte Folded Spill
-	csc	$c17, $zero, 416($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c19, 0($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c18, 0($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c17, 0($c11)  # 32-byte Folded Spill
 	.cfi_offset 91, -32
 	.cfi_offset 90, -64
 	.cfi_offset 89, -96
@@ -329,42 +349,66 @@ mixed_tmp:                              # @mixed_tmp
                                         # kill: def $a2 killed $a2 killed $a2_64
                                         # kill: def $a1 killed $a1 killed $a1_64
                                         # kill: def $a0 killed $a0 killed $a0_64
-	cincoffset	$c1, $c11, 412
-	csetbounds	$c1, $c1, 4
-	cincoffset	$c2, $c11, 352
-	csetbounds	$c2, $c2, 32
-	cincoffset	$c9, $c11, 348
-	csetbounds	$c9, $c9, 4
-	cincoffset	$c10, $c11, 288
-	csetbounds	$c10, $c10, 32
-	cincoffset	$c12, $c11, 284
-	csetbounds	$c12, $c12, 4
-	cincoffset	$c13, $c11, 224
-	csetbounds	$c13, $c13, 32
-	cincoffset	$c14, $c11, 220
-	csetbounds	$c14, $c14, 4
-	cincoffset	$c15, $c11, 160
-	csetbounds	$c15, $c15, 32
-	cincoffset	$c16, $c11, 156
-	csetbounds	$c16, $c16, 4
-	cincoffset	$c17, $c11, 96
-	csetbounds	$c17, $c17, 32
-	cincoffset	$c18, $c11, 92
-	csetbounds	$c18, $c18, 4
-	cincoffset	$c19, $c11, 32
-	csetbounds	$c19, $c19, 32
-	csw	$4, $zero, 0($c1)
-	csc	$c3, $zero, 0($c2)
-	csw	$5, $zero, 0($c9)
-	csc	$c4, $zero, 0($c10)
-	csw	$6, $zero, 0($c12)
-	csc	$c5, $zero, 0($c13)
-	csw	$7, $zero, 0($c14)
-	csc	$c6, $zero, 0($c15)
-	csw	$8, $zero, 0($c16)
-	csc	$c7, $zero, 0($c17)
-	csw	$9, $zero, 0($c18)
-	csc	$c8, $zero, 0($c19)
+	# Caps need to be properly aligned, 2 options:
+	# - First store all the words so that a cap can be aligned
+	# - Write zeroes
+	# To keep in line with the arguments read/write, I've chosen to write zeroes
+	ucsw	$c11, $4, 0($c11)
+	csetbounds $c1, $c11, 4
+	# Write zeroes
+	ucsw $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+
+	ucsc	$c11, $c3, 0($c11)
+	csetbounds $c2, $c11, 32
+	ucsw	$c11, $5, 0($c11)
+	csetbounds $c9, $c11, 4
+	ucsw $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+
+	ucsc	$c11, $c4, 0($c11)
+	csetbounds $c10, $c11, 32
+	ucsw	$c11, $6, 0($c11)
+	csetbounds $c12, $c11, 4
+	ucsw $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+
+	ucsc	$c11, $c5, 0($c11)
+	csetbounds $c13, $c11, 32
+	ucsw	$c11, $7, 0($c11)
+	csetbounds $c14, $c11, 4
+	ucsw $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+
+	ucsc	$c11, $c6, 0($c11)
+	csetbounds $c15, $c11, 32
+	ucsw	$c11, $8, 0($c11)
+	csetbounds $c16, $c11, 4
+	ucsw $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+
+	ucsc	$c11, $c7, 0($c11)
+	csetbounds $c17, $c11, 32
+	ucsw	$c11, $9, 0($c11)
+	csetbounds $c18, $c11, 4
+	ucsw $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+	ucsd $c11, $zero, 0($c11)
+
+	ucsc	$c11, $c8, 0($c11)
+	csetbounds $c19, $c11, 32
+
 	clw	$1, $zero, 0($c1)
 	clc	$c1, $zero, 0($c2)
 	clw	$2, $zero, 0($c1)
@@ -392,10 +436,10 @@ mixed_tmp:                              # @mixed_tmp
                                         # implicit-def: $v1_64
 	move	$3, $1
 	move	$2, $3
-	clc	$c17, $zero, 416($c11)  # 32-byte Folded Reload
-	clc	$c18, $zero, 448($c11)  # 32-byte Folded Reload
-	clc	$c19, $zero, 480($c11)  # 32-byte Folded Reload
-	cincoffset	$c11, $c11, 512
+	clc	$c17, $zero, 384($c11)  # 32-byte Folded Reload
+	clc	$c18, $zero, 416($c11)  # 32-byte Folded Reload
+	clc	$c19, $zero, 448($c11)  # 32-byte Folded Reload
+	#cincoffset	$c11, $c11, 512
 	cjr	$c17
 	nop
 	.set	at
@@ -482,15 +526,16 @@ test:                                   # @test
 	clw	$11, $zero, 0($c10)
 	clw	$1, $zero, 0($c12)
 	clw	$12, $zero, 0($c13)
+	# Arguments written to stack
 	cmove	$c2, $c11
-	csd	$1, $zero, 0($c2)
-	csd	$12, $zero, 8($c2)
-	csetbounds	$c2, $c2, 16
-	ori	$1, $zero, 65495
-	candperm	$c2, $c2, $1
+	#csd	$1, $zero, 0($c2)
+	#csd	$12, $zero, 8($c2)
+	#csetbounds	$c2, $c2, 16
+	#ori	$1, $zero, 65495
+	#candperm	$c2, $c2, $1
 	clcbi	$c14, %capcall20(tmp)($c1)
 	csc	$c13, $zero, 448($c11)  # 32-byte Folded Spill
-	cmove	$c13, $c2
+	#cmove	$c13, $c2
 	csc	$c12, $zero, 416($c11)  # 32-byte Folded Spill
 	cmove	$c12, $c14
 	csc	$c1, $zero, 384($c11)   # 32-byte Folded Spill
@@ -502,18 +547,42 @@ test:                                   # @test
 	csc	$c8, $zero, 192($c11)   # 32-byte Folded Spill
 	csc	$c9, $zero, 160($c11)   # 32-byte Folded Spill
 	csc	$c10, $zero, 128($c11)  # 32-byte Folded Spill
+
 	csw	$2, $zero, 124($c11)    # 4-byte Folded Spill
 	csd	$1, $zero, 112($c11)    # 8-byte Folded Spill
+
+	# CC: pre call
+	# Reload these caps as they contain a cap to the args 9 & 10
+	clc $c14, $zero, 416($c11)
+	clc $c2, $zero, 448($c11)
+
+	cmove $c24, $c11
+	cshrink $c11, $c11
+	cuninit $c11, $c11
+
+	clw $1, $zero, 0($c14) # $1 = 9  (first arg passed on stack)
+	clw $2, $zero, 0($c2) # $2 = 10 (snd arg passed on stack)
+	ucsd $c11, $1, 0($c11)
+	ucsd $c11, $2, 0($c11)
+
 	cjalr	$c12, $c17
 	nop
-	cmove	$c1, $c11
-	clc	$c2, $zero, 416($c11)   # 32-byte Folded Reload
-	csc	$c2, $zero, 0($c1)
-	clc	$c3, $zero, 448($c11)   # 32-byte Folded Reload
-	csc	$c3, $zero, 32($c1)
-	csetbounds	$c1, $c1, 64
+
+	# CC: post call
+	cmove $c11, $c24
+
+	# Test setup: store tmp call result in $13=$t1
+	move $13, $2
+
+	# write last 2 arguments to the stack
+	#cmove	$c1, $c11
+	#clc	$c2, $zero, 416($c11)   # 32-byte Folded Reload
+	#csc	$c2, $zero, 0($c1)
+	#clc	$c3, $zero, 448($c11)   # 32-byte Folded Reload
+	#csc	$c3, $zero, 32($c1)
+	#csetbounds	$c1, $c1, 64
 	cld	$1, $zero, 112($c11)    # 8-byte Folded Reload
-	candperm	$c13, $c1, $1
+	#candperm	$c13, $c1, $1
 	clc	$c1, $zero, 384($c11)   # 32-byte Folded Reload
 	clcbi	$c12, %capcall20(cap_tmp)($c1)
 	clc	$c3, $zero, 352($c11)   # 32-byte Folded Reload
@@ -525,8 +594,26 @@ test:                                   # @test
 	clc	$c9, $zero, 160($c11)   # 32-byte Folded Reload
 	clc	$c10, $zero, 128($c11)  # 32-byte Folded Reload
 	csw	$2, $zero, 108($c11)    # 4-byte Folded Spill
+
+	# CC: pre call
+	clc	$c2, $zero, 416($c11)   # 32-byte Folded Reload
+	clc	$c13, $zero, 448($c11)   # 32-byte Folded Reload
+
+	cmove $c25, $c11
+	cshrink $c11, $c11
+	cuninit $c11, $c11
+	ucsc	$c11, $c2, 0($c11)
+	ucsc	$c11, $c13, 0($c11)
+
 	cjalr	$c12, $c17
 	nop
+
+	# CC: post call
+	cmove $c11, $c25
+
+	# Test setup: store tmp call result in $14=$t2
+	move $14, $2
+
 	clc	$c1, $zero, 352($c11)   # 32-byte Folded Reload
 	clw	$4, $zero, 0($c1)
 	clc	$c2, $zero, 288($c11)   # 32-byte Folded Reload
@@ -549,15 +636,39 @@ test:                                   # @test
 	clc	$c8, $zero, 448($c11)   # 32-byte Folded Reload
 	cgetnull	$c13
 	csw	$2, $zero, 104($c11)    # 4-byte Folded Spill
+
+	# CC: pre call
+	cmove $c26, $c11
+	cshrink $c11, $c11
+	cuninit $c11, $c11
+
 	cjalr	$c12, $c17
 	nop
+
+	# CC: post call
+	cmove $c11, $c26
+
+	# Test setup: store tmp call result in $15=$t3
+	move $15, $2
+
+
 	clc	$c1, $zero, 384($c11)   # 32-byte Folded Reload
 	clcbi	$c12, %capcall20(f)($c1)
 	daddiu	$4, $zero, 10
 	cgetnull	$c13
 	csw	$2, $zero, 100($c11)    # 4-byte Folded Spill
+
+	# CC: pre call
+	cmove $c22, $c11
+	cshrink $c11, $c11
+	cuninit $c11, $c11
+
 	cjalr	$c12, $c17
 	nop
+
+	# CC: post call
+	cmove $c11, $c22
+	
 	sll	$2, $2, 0
 	clc	$c17, $zero, 544($c11)  # 32-byte Folded Reload
 	cincoffset	$c11, $c11, 576

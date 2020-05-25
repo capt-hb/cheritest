@@ -506,6 +506,10 @@ test:                                   # @test
 	csd	$1, $zero, 112($c11)    # 8-byte Folded Spill
 	cjalr	$c12, $c17
 	nop
+
+	# Test setup: store tmp call result in $13=$t1
+	move $13, $2
+
 	cmove	$c1, $c11
 	clc	$c2, $zero, 416($c11)   # 32-byte Folded Reload
 	csc	$c2, $zero, 0($c1)
@@ -527,6 +531,10 @@ test:                                   # @test
 	csw	$2, $zero, 108($c11)    # 4-byte Folded Spill
 	cjalr	$c12, $c17
 	nop
+
+	# Test setup: store tmp call result in $14=$t2
+	move $14, $2
+
 	clc	$c1, $zero, 352($c11)   # 32-byte Folded Reload
 	clw	$4, $zero, 0($c1)
 	clc	$c2, $zero, 288($c11)   # 32-byte Folded Reload
@@ -551,6 +559,10 @@ test:                                   # @test
 	csw	$2, $zero, 104($c11)    # 4-byte Folded Spill
 	cjalr	$c12, $c17
 	nop
+
+	# Test setup: store tmp call result in $15=$t3
+	move $15, $2
+
 	clc	$c1, $zero, 384($c11)   # 32-byte Folded Reload
 	clcbi	$c12, %capcall20(f)($c1)
 	daddiu	$4, $zero, 10

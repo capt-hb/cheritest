@@ -741,7 +741,8 @@ TEST_PURECAP_ASM_SRCS:=tests/purecap/test_purecap_reg_init.s \
 			tests/purecap/test_purecap_original_calling_convention.s \
 			tests/purecap/test_purecap_original_cc_stack_growth.s \
 			tests/purecap/test_purecap_uninit_calling_convention.s \
-			tests/purecap/test_purecap_uninit_cc_stack_growth.s 
+			tests/purecap/test_purecap_uninit_cc_stack_growth.s \
+			tests/purecap/test_purecap_uninit_cc_stack_growth_O1.s 
 TEST_PURECAP_FILES:= $(notdir $(TEST_PURECAP_C_SRCS) $(TEST_PURECAP_ASM_SRCS) $(TEST_PURECAP_CXX_SRCS))
 endif
 

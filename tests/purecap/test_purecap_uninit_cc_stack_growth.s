@@ -5,7 +5,7 @@
 .include "macros.s"
 
 #
-# Test original calling convention gives correct result
+# Test uninit calling convention gives correct result
 #
 	.globl	g                       # -- Begin function g
 	.p2align	3

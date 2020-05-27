@@ -42,7 +42,6 @@ g:                                      # @g
                                         # implicit-def: $v1_64
 	move	$3, $1
 	move	$2, $3
-	#cincoffset	$c11, $c11, 96
 	cjr	$c17
 	nop
 	.set	at
@@ -121,9 +120,6 @@ f:                                      # @f
 	sll	$2, $2, 0
 	clc	$c17, $zero, 64($c11)   # 32-byte Folded Reload
 
-	#clc $c17, $zero, 96($c11)
-
-	#cincoffset	$c11, $c11, 128
 	cjr	$c17
 	nop
 	.set	at
@@ -208,7 +204,6 @@ tmp:                                    # @tmp
 	move	$3, $1
 	move	$2, $3
 	cgetnull	$c13
-	#cincoffset	$c11, $c11, 64
 	cjr	$c17
 	nop
 	.set	at
@@ -309,7 +304,6 @@ cap_tmp:                                # @cap_tmp
 	clc	$c19, $zero, 384($c11)  # 32-byte Folded Reload
 	clc	$c20, $zero, 416($c11)  # 32-byte Folded Reload
 	clc	$c21, $zero, 448($c11)  # 32-byte Folded Reload
-	#cincoffset	$c11, $c11, 512
 	cjr	$c17
 	nop
 	.set	at
@@ -439,7 +433,6 @@ mixed_tmp:                              # @mixed_tmp
 	clc	$c17, $zero, 384($c11)  # 32-byte Folded Reload
 	clc	$c18, $zero, 416($c11)  # 32-byte Folded Reload
 	clc	$c19, $zero, 448($c11)  # 32-byte Folded Reload
-	#cincoffset	$c11, $c11, 512
 	cjr	$c17
 	nop
 	.set	at

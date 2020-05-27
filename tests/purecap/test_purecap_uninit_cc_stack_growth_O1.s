@@ -48,6 +48,7 @@ f:                                      # @f
 # %bb.0:                                # %entry
 	#cincoffset	$c11, $c11, -64
 	.cfi_def_cfa_offset 64
+	cgetuninit $t0, $c11
 	ucsc	$c11, $c17, 0($c11)   # 32-byte Folded Spill
 	.cfi_offset 89, -32
 	lui	$1, %pcrel_hi(_CHERI_CAPABILITY_TABLE_-8)
@@ -67,16 +68,16 @@ f:                                      # @f
 	cuninit $c11, $c11
 
 	cjalr	$c12, $c17
+	cgetnull	$c13
 
 	# CC: post call
 	cmove $c11, $c19
 
-	cgetnull	$c13
 	sll	$2, $2, 0
 	cincoffset $c11, $c11, 8
 	clc	$c17, $zero, 0($c11)   # 32-byte Folded Reload
 	cjr	$c17
-	#cincoffset	$c11, $c11, 64
+	nop
 	.set	at
 	.set	macro
 	.set	reorder
@@ -234,13 +235,14 @@ test:                                   # @test
 	cmove $c18, $c11
 	cshrink $c11, $c11
 	cuninit $c11, $c11
+	cgetuninit $t1, $c11
 
 	cjalr	$c12, $c17
+	cgetnull	$c13
 
 	# CC: post call
 	cmove $c11, $c18
 
-	cgetnull	$c13
 	sll	$2, $2, 0
 	clc	$c17, $zero, 0($c11)    # 32-byte Folded Reload
 	cjr	$c17

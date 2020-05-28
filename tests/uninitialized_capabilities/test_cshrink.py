@@ -13,3 +13,9 @@ class test_cshrink(BaseBERITestCase):
     def test_cshrink_with_cursor_at_end_does_nothing(self):
         '''Test that using cshrink with a capability for which cursor=end does not change end'''
         assert self.MIPS.a0 == self.MIPS.a3
+
+    def test_cshrink_increases_base(self):
+        assert self.MIPS.t0 == self.MIPS.t1
+        assert self.MIPS.t0 == self.MIPS.t3
+        assert self.MIPS.t0 + 1 == self.MIPS.t2
+

@@ -64,7 +64,7 @@ f:                                      # @f
 
 	# CC: pre call
 	cmove $c19, $c11
-	cshrink $c11, $c11
+	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
 	cjalr	$c12, $c17
@@ -233,7 +233,7 @@ test:                                   # @test
 	
 	# CC: pre call
 	cmove $c18, $c11
-	cshrink $c11, $c11
+	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 	cgetuninit $t1, $c11
 

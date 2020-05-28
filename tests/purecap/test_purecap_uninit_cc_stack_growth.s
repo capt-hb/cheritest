@@ -108,7 +108,7 @@ f:                                      # @f
 
 	# CC: pre call
 	cmove $c23, $c11
-	cshrink $c11, $c11
+	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
 	cjalr	$c12, $c17
@@ -550,7 +550,7 @@ test:                                   # @test
 	clc $c2, $zero, 448($c11)
 
 	cmove $c24, $c11
-	cshrink $c11, $c11
+	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
 	clw $1, $zero, 0($c14) # $1 = 9  (first arg passed on stack)
@@ -593,7 +593,7 @@ test:                                   # @test
 	clc	$c13, $zero, 448($c11)   # 32-byte Folded Reload
 
 	cmove $c25, $c11
-	cshrink $c11, $c11
+	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 	ucsc	$c11, $c2, 0($c11)
 	ucsc	$c11, $c13, 0($c11)
@@ -632,7 +632,7 @@ test:                                   # @test
 
 	# CC: pre call
 	cmove $c26, $c11
-	cshrink $c11, $c11
+	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
 	cjalr	$c12, $c17
@@ -653,7 +653,7 @@ test:                                   # @test
 
 	# CC: pre call
 	cmove $c22, $c11
-	cshrink $c11, $c11
+	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
 	cjalr	$c12, $c17

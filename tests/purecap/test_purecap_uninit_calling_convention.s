@@ -25,8 +25,8 @@ doSomething:                            # @doSomething
 	cgetuninit $t0, $c11
 	.cfi_def_cfa_offset 32
                                         # kill: def $a0 killed $a0 killed $a0_64
-	ucsw	$c1, $4, 0($c11)
-	csetbounds	$c1, $c1, 4
+	ucsw	$c11, $4, 0($c11)
+	csetbounds	$c1, $c11, 4
 	clw	$2, $zero, 0($c1)
 	cjr	$c17
 	nop
@@ -77,11 +77,12 @@ test:                                   # @test
 	# and put the cursor passed the supplied data (arguments, rp, ...)
 	# note that only registers are used here so no argument spilling occurs!
 	cmove $c18, $c11 # tmp: currently store this sp in a register before uninit
-	cshrink $c11, $c11
+	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
 	cjalr	$c12, $c17
 	nop
+
 	cmove $c11, $c18 # tmp: restore old sp
 	clc	$c1, $zero, 32($c11)    # 32-byte Folded Reload
 	csw	$2, $zero, 0($c1)

@@ -20,7 +20,7 @@ BEGIN_TEST
 		cuninit $c1, $c1
 		cgetoffset $a0, $c1
 
-		ucsw $c1, $t1, 0($c1)
+		ucsw $c1, $t1, -1($c1)
 		cgetoffset $a1, $c1
 		clw $a2, $zero, 0($c1)
 
@@ -28,9 +28,9 @@ BEGIN_TEST
 		csetbounds $c2, $c1, 4
 
 		# store $c2
-		ucsw $c1, $t1, 0($c1) # needed for 32-bit alignment of caps
+		ucsw $c1, $t1, -1($c1) # needed for 32-bit alignment of caps
 		cgetoffset $s0, $c1
-		ucsc $c1, $c2, 0($c1)
+		ucsc $c1, $c2, -1($c1)
 		cgetoffset $s1, $c1
 		sub $s1, $s0, $s1
 

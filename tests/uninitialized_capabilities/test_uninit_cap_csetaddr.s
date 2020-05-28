@@ -21,7 +21,7 @@ BEGIN_TEST
 	csetaddr $c1, $c1, $t1
 
 	dli $t1, 42
-	ucsb $c1, $t1, 0($c1)
+	ucsb $c1, $t1, -1($c1)
 
 	csetaddr $c1, $c1, $t0
 	cgetaddr $a0, $c1

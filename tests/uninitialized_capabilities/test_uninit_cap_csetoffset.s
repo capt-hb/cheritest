@@ -25,28 +25,28 @@ BEGIN_TEST
 	# store 10 as a byte on the cursor of the uninit cap
 	dli     $t1, 10 
 	cgetoffset $s0, $c1 # store the offset 
-	ucsb    $c1, $t1, 0($c1)
+	ucsb    $c1, $t1, -1($c1)
 	cgetoffset $s1, $c1
 	sub $a1, $s0, $s1 # a byte was written so $a1 should contain 1 (decr of cursor after writing)
 
 	# store 42 as a halfword on the cursor of the uninit cap
 	dli     $t1, 42
 	cgetoffset $s0, $c1 # store the offset 
-	ucsh $c1, $t1, 0($c1)
+	ucsh $c1, $t1, -1($c1)
 	cgetoffset $s1, $c1
 	sub $a2, $s0, $s1 # halfword was written, so $a2 should contain 2
 
 	# store 100 as a word on the cursor of the uninit cap
 	dli $t1, 100
 	cgetoffset $s0, $c1 # store the offset 
-	ucsw $c1, $t1, 0($c1)
+	ucsw $c1, $t1, -1($c1)
 	cgetoffset $s1, $c1
 	sub $a3, $s0, $s1 # halfword was written, so $a2 should contain 4
 
 	# store 420 as a double word on the cursor of the uninit cap
 	dli     $t1, 420
 	cgetoffset $s0, $c1 # store the offset 
-	ucsd $c1, $t1, 0($c1)
+	ucsd $c1, $t1, -1($c1)
 	cgetoffset $s1, $c1
 	sub $a4, $s0, $s1 # halfword was written, so $a2 should contain 4
 

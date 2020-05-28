@@ -26,27 +26,27 @@ BEGIN_TEST
 		# reading underneath cursor should throw an error
                 clb $a0, $zero, -2($c1)
 
-		# Store 10 as a byte on cursor
+		# Store 10 as a byte just below cursor
                 dli     $t1, 10
-                ucsb    $c1, $t1, 0($c1)
+                ucsb    $c1, $t1, -1($c1)
 		cgetoffset $t2, $c1
 		clb $s0, $zero, 0($c1)
 
-		# Store 42 as a half word on cursor
+		# Store 42 as a half word just below cursor
                 dli     $t1, 42
-                ucsh    $c1, $t1, 0($c1)
+                ucsh    $c1, $t1, -1($c1)
 		cgetoffset $t3, $c1
 		clh $s1, $zero, 0($c1)
 
-		# Store 100 as a word on cursor
+		# Store 100 as a word just below cursor
                 dli     $t1, 100
-                ucsw    $c1, $t1, 0($c1)
+                ucsw    $c1, $t1, -1($c1)
 		cgetoffset $v0, $c1
 		clw $s2, $zero, 0($c1)
 
-		# Store 420 as a double word on cursor
+		# Store 420 as a double word just below cursor
                 dli     $t1, 420
-                ucsd    $c1, $t1, 0($c1)
+                ucsd    $c1, $t1, -1($c1)
 		cgetoffset $v1, $c1
 		cld $s3, $zero, 0($c1)
 

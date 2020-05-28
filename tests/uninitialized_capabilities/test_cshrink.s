@@ -12,7 +12,7 @@ BEGIN_TEST
 	cgetbase $t0, $c1
 	cshrink $c2, $c1, 0 		# length of $c2 = offset + 1 (= 9)
 	dli $s0, 10
-	ucsb $c2, $s0, 0($c2)
+	ucsb $c2, $s0, -1($c2)
 	cgetlen $a0, $c1
 	cgetlen $a1, $c2
 	cgetbase $t3, $c2
@@ -30,7 +30,7 @@ BEGIN_TEST
 	cgetlen $a3, $c5
 	cshrink $c6, $c5, 1
 	cgetbase $t2, $c6
-	ucsb $c5, $s0, 0($c5)
+	ucsb $c5, $s0, -1($c5)
 END_TEST
 
                 .data

@@ -4,4 +4,4 @@ class test_uninit_cap_csetaddr(BaseBERITestCase):
     EXPECTED_EXCEPTIONS = 1
 
     def test_setting_address(self):
-        assert self.MIPS.a0 == 2
+        assert self.MIPS.s0 < self.MIPS.a0

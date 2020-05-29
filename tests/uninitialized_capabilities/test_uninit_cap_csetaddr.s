@@ -13,16 +13,19 @@ BEGIN_TEST
 	csetoffset $c1, $c1, $t0
 	dli $t0, 2
 	csetbounds $c1, $c1, $t0
+	cgetaddr $s0, $c1
 
 	cuninit $c1, $c1
 
 	# setting cursor lower should result in error
 	dli $t1, 0 
-	csetaddr $c1, $c1, $t1
+	csetaddr $c2, $c1, $t1
 
 	dli $t1, 42
-	ucsb $c1, $t1, -1($c1)
+	ucsb $c1, $t1, 0($c1)
 
+	cincoffset $c2, $c1, 2
+	cgetaddr $t0, $c2
 	csetaddr $c1, $c1, $t0
 	cgetaddr $a0, $c1
 END_TEST

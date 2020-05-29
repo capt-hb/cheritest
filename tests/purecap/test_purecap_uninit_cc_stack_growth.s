@@ -26,11 +26,11 @@ g:                                      # @g
 	.cfi_def_cfa_offset 96
 	#cincoffset	$c1, $c11, 64
 	#csetbounds	$c1, $c1, 32
-	ucsc $c11, $c3, 0($c11)
+	ucsc $c11, $c3, -1($c11)
 	csetbounds	$c1, $c11, 32
 	#cincoffset	$c2, $c11, 32
 	#csetbounds	$c2, $c2, 32
-	ucsc $c11, $c4, 0($c11)
+	ucsc $c11, $c4, -1($c11)
 	csetbounds $c2, $c11, 32
 	#csc	$c3, $zero, 0($c1)
 	#csc	$c4, $zero, 0($c2)
@@ -70,7 +70,7 @@ f:                                      # @f
 	#cincoffset	$c11, $c11, -128
 	.cfi_def_cfa_offset 128
 	#csc	$c17, $zero, 96($c11)   # 32-byte Folded Spill
-	ucsc	$c11, $c17, 0($c11)   # 32-byte Folded Spill
+	ucsc	$c11, $c17, -1($c11)   # 32-byte Folded Spill
 	.cfi_offset 89, -32
 	lui	$1, %pcrel_hi(_CHERI_CAPABILITY_TABLE_-8)
 	daddiu	$1, $1, %pcrel_lo(_CHERI_CAPABILITY_TABLE_-4)
@@ -80,7 +80,7 @@ f:                                      # @f
 	#csetbounds	$c2, $c2, 4
 	#csw	$4, $zero, 0($c2)
 
-	ucsw $c11, $4, 0($c11)
+	ucsw $c11, $4, -1($c11)
 	csetbounds $c2, $c11, 4
 
 	#cincoffset	$c3, $c11, 88
@@ -88,18 +88,18 @@ f:                                      # @f
 	addiu	$2, $zero, 10
 	#csw	$2, $zero, 0($c3)
 
-	ucsw	$c11, $2, 0($c11)
+	ucsw	$c11, $2, -1($c11)
 	csetbounds $c3, $c11, 4 # $c3 = &x
 
 	clcbi	$c12, %capcall20(g)($c1)
 	#csc	$c3, $zero, 32($c11)    # 32-byte Folded Spill
-	ucsw $c11, $zero, 0($c11)
-	ucsw $c11, $zero, 0($c11)
-	ucsw $c11, $zero, 0($c11)
-	ucsw $c11, $zero, 0($c11)
-	ucsw $c11, $zero, 0($c11)
-	ucsw $c11, $zero, 0($c11)
-	ucsc $c11, $c3, 0($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsc $c11, $c3, -1($c11)
 
 	cmove	$c3, $c2 # $c3 = &a
 	#clc	$c4, $zero, 32($c11)    # 32-byte Folded Reload
@@ -160,25 +160,25 @@ tmp:                                    # @tmp
                                         # kill: def $a2 killed $a2 killed $a2_64
                                         # kill: def $a1 killed $a1 killed $a1_64
                                         # kill: def $a0 killed $a0 killed $a0_64
-	ucsw	$c11, $4, 0($c11)
+	ucsw	$c11, $4, -1($c11)
 	csetbounds $c1, $c11, 4
-	ucsw	$c11, $5, 0($c11)
+	ucsw	$c11, $5, -1($c11)
 	csetbounds $c2, $c11, 4
-	ucsw	$c11, $6, 0($c11)
+	ucsw	$c11, $6, -1($c11)
 	csetbounds $c3, $c11, 4
-	ucsw	$c11, $7, 0($c11)
+	ucsw	$c11, $7, -1($c11)
 	csetbounds $c4, $c11, 4
-	ucsw	$c11, $8, 0($c11)
+	ucsw	$c11, $8, -1($c11)
 	csetbounds $c5, $c11, 4
-	ucsw	$c11, $9, 0($c11)
+	ucsw	$c11, $9, -1($c11)
 	csetbounds $c6, $c11, 4
-	ucsw	$c11, $10, 0($c11)
+	ucsw	$c11, $10, -1($c11)
 	csetbounds $c7, $c11, 4
-	ucsw	$c11, $11, 0($c11)
+	ucsw	$c11, $11, -1($c11)
 	csetbounds $c8, $c11, 4
-	ucsw	$c11, $2, 0($c11)
+	ucsw	$c11, $2, -1($c11)
 	csetbounds $c9, $c11, 4
-	ucsw	$c11, $1, 0($c11)
+	ucsw	$c11, $1, -1($c11)
 	csetbounds $c10, $c11, 4
 
 	clw	$1, $zero, 0($c1)
@@ -231,11 +231,11 @@ cap_tmp:                                # @cap_tmp
 # %bb.0:                                # %entry
 	#cincoffset	$c11, $c11, -512
 	.cfi_def_cfa_offset 512
-	ucsc	$c11, $c21, 0($c11)  # 32-byte Folded Spill
-	ucsc	$c11, $c20, 0($c11)  # 32-byte Folded Spill
-	ucsc	$c11, $c19, 0($c11)  # 32-byte Folded Spill
-	ucsc	$c11, $c18, 0($c11)  # 32-byte Folded Spill
-	ucsc	$c11, $c17, 0($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c21, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c20, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c19, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c18, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c17, -1($c11)  # 32-byte Folded Spill
 	.cfi_offset 93, -32
 	.cfi_offset 92, -64
 	.cfi_offset 91, -96
@@ -245,25 +245,25 @@ cap_tmp:                                # @cap_tmp
 	clc	$c1, $zero, 160($c11)
 	clc	$c2, $zero, 192($c11)
 
-	ucsc	$c11, $c3, 0($c11)
+	ucsc	$c11, $c3, -1($c11)
 	csetbounds $c12, $c11, 32
-	ucsc	$c11, $c4, 0($c11)
+	ucsc	$c11, $c4, -1($c11)
 	csetbounds $c13, $c11, 32
-	ucsc	$c11, $c5, 0($c11)
+	ucsc	$c11, $c5, -1($c11)
 	csetbounds $c14, $c11, 32
-	ucsc	$c11, $c6, 0($c11)
+	ucsc	$c11, $c6, -1($c11)
 	csetbounds $c15, $c11, 32
-	ucsc	$c11, $c7, 0($c11)
+	ucsc	$c11, $c7, -1($c11)
 	csetbounds $c16, $c11, 32
-	ucsc	$c11, $c8, 0($c11)
+	ucsc	$c11, $c8, -1($c11)
 	csetbounds $c17, $c11, 32
-	ucsc	$c11, $c9, 0($c11)
+	ucsc	$c11, $c9, -1($c11)
 	csetbounds $c18, $c11, 32
-	ucsc	$c11, $c10, 0($c11)
+	ucsc	$c11, $c10, -1($c11)
 	csetbounds $c19, $c11, 32
-	ucsc	$c11, $c2, 0($c11)
+	ucsc	$c11, $c2, -1($c11)
 	csetbounds $c20, $c11, 32
-	ucsc	$c11, $c1, 0($c11)
+	ucsc	$c11, $c1, -1($c11)
 	csetbounds $c21, $c11, 32
 
 	clc	$c1, $zero, 0($c12)
@@ -331,9 +331,9 @@ mixed_tmp:                              # @mixed_tmp
 # %bb.0:                                # %entry
 	#cincoffset	$c11, $c11, -512
 	.cfi_def_cfa_offset 512
-	ucsc	$c11, $c19, 0($c11)  # 32-byte Folded Spill
-	ucsc	$c11, $c18, 0($c11)  # 32-byte Folded Spill
-	ucsc	$c11, $c17, 0($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c19, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c18, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c17, -1($c11)  # 32-byte Folded Spill
 	.cfi_offset 91, -32
 	.cfi_offset 90, -64
 	.cfi_offset 89, -96
@@ -347,60 +347,60 @@ mixed_tmp:                              # @mixed_tmp
 	# - First store all the words so that a cap can be aligned
 	# - Write zeroes
 	# To keep in line with the arguments read/write, I've chosen to write zeroes
-	ucsw	$c11, $4, 0($c11)
+	ucsw	$c11, $4, -1($c11)
 	csetbounds $c1, $c11, 4
 	# Write zeroes
-	ucsw $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
 
-	ucsc	$c11, $c3, 0($c11)
+	ucsc	$c11, $c3, -1($c11)
 	csetbounds $c2, $c11, 32
-	ucsw	$c11, $5, 0($c11)
+	ucsw	$c11, $5, -1($c11)
 	csetbounds $c9, $c11, 4
-	ucsw $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
 
-	ucsc	$c11, $c4, 0($c11)
+	ucsc	$c11, $c4, -1($c11)
 	csetbounds $c10, $c11, 32
-	ucsw	$c11, $6, 0($c11)
+	ucsw	$c11, $6, -1($c11)
 	csetbounds $c12, $c11, 4
-	ucsw $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
 
-	ucsc	$c11, $c5, 0($c11)
+	ucsc	$c11, $c5, -1($c11)
 	csetbounds $c13, $c11, 32
-	ucsw	$c11, $7, 0($c11)
+	ucsw	$c11, $7, -1($c11)
 	csetbounds $c14, $c11, 4
-	ucsw $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
 
-	ucsc	$c11, $c6, 0($c11)
+	ucsc	$c11, $c6, -1($c11)
 	csetbounds $c15, $c11, 32
-	ucsw	$c11, $8, 0($c11)
+	ucsw	$c11, $8, -1($c11)
 	csetbounds $c16, $c11, 4
-	ucsw $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
 
-	ucsc	$c11, $c7, 0($c11)
+	ucsc	$c11, $c7, -1($c11)
 	csetbounds $c17, $c11, 32
-	ucsw	$c11, $9, 0($c11)
+	ucsw	$c11, $9, -1($c11)
 	csetbounds $c18, $c11, 4
-	ucsw $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
-	ucsd $c11, $zero, 0($c11)
+	ucsw $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
 
-	ucsc	$c11, $c8, 0($c11)
+	ucsc	$c11, $c8, -1($c11)
 	csetbounds $c19, $c11, 32
 
 	clw	$1, $zero, 0($c1)
@@ -555,8 +555,8 @@ test:                                   # @test
 
 	clw $1, $zero, 0($c14) # $1 = 9  (first arg passed on stack)
 	clw $2, $zero, 0($c2) # $2 = 10 (snd arg passed on stack)
-	ucsd $c11, $1, 0($c11)
-	ucsd $c11, $2, 0($c11)
+	ucsd $c11, $1, -1($c11)
+	ucsd $c11, $2, -1($c11)
 
 	cjalr	$c12, $c17
 	nop
@@ -595,8 +595,8 @@ test:                                   # @test
 	cmove $c25, $c11
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
-	ucsc	$c11, $c2, 0($c11)
-	ucsc	$c11, $c13, 0($c11)
+	ucsc	$c11, $c2, -1($c11)
+	ucsc	$c11, $c13, -1($c11)
 
 	cjalr	$c12, $c17
 	nop

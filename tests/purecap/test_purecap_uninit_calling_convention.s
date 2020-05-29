@@ -25,7 +25,7 @@ doSomething:                            # @doSomething
 	cgetuninit $t0, $c11
 	.cfi_def_cfa_offset 32
                                         # kill: def $a0 killed $a0 killed $a0_64
-	ucsw	$c11, $4, 0($c11)
+	ucsw	$c11, $4, -1($c11)
 	csetbounds	$c1, $c11, 4
 	clw	$2, $zero, 0($c1)
 	cjr	$c17

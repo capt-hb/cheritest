@@ -49,14 +49,14 @@ f:                                      # @f
 	#cincoffset	$c11, $c11, -64
 	.cfi_def_cfa_offset 64
 	cgetuninit $t0, $c11
-	ucsc	$c11, $c17, 0($c11)   # 32-byte Folded Spill
+	ucsc	$c11, $c17, -1($c11)   # 32-byte Folded Spill
 	.cfi_offset 89, -32
 	lui	$1, %pcrel_hi(_CHERI_CAPABILITY_TABLE_-8)
 	daddiu	$1, $1, %pcrel_lo(_CHERI_CAPABILITY_TABLE_-4)
 	cgetpccincoffset	$c1, $1
-	ucsw $c11, $4, 0($c11)
+	ucsw $c11, $4, -1($c11)
 	addiu	$1, $zero, 10
-	ucsw	$c11, $1, 0($c11)
+	ucsw	$c11, $1, -1($c11)
 	clcbi	$c12, %capcall20(g)($c1)
 	cincoffset	$c3, $c11, 4
 	csetbounds	$c3, $c3, 4

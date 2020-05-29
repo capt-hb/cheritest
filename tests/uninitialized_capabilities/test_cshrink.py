@@ -6,7 +6,7 @@ class test_cshrink(BaseBERITestCase):
     def test_cshrink_lowers_end(self):
         '''Test that lowering the end of a capability works'''
         assert self.MIPS.a0 == 10
-        assert self.MIPS.a1 == 9
+        assert self.MIPS.a1 == 8
         assert self.MIPS.a1 < self.MIPS.a0
         assert self.MIPS.a2 == 1
 

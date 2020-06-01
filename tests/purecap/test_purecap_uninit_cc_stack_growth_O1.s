@@ -293,7 +293,7 @@ test:                                   # @test
 	cseal $c1, $c17, $c13 
 	clearlo 0xffef
 	clearhi 0xffff
-	cclearlo 0xc7f8
+	cclearlo 0xe7f8
 	cclearhi 0xffff
 	cjr $c12
 	nop 

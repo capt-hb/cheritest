@@ -17,16 +17,20 @@ product:                                # @product
                                         # kill: def $a1 killed $a1 killed $a1_64
                                         # kill: def $a0 killed $a0 killed $a0_64
 	ucsw	$c11, $4, -1($c11)
-	csetbounds $c1, $c11, 4
+	csetbounds $c3, $c11, 4
 	ucsw	$c11, $5, -1($c11)
-	csetbounds $c2, $c11, 4
-	clw	$1, $zero, 0($c1)
-	clw	$2, $zero, 0($c2)
+	csetbounds $c4, $c11, 4
+	clw	$1, $zero, 0($c3)
+	clw	$2, $zero, 0($c4)
 	mult	$1, $2
 	mflo	$1
 	sll	$2, $1, 0
-	cjr	$c17
-	nop
+	ucsd $c11, $zero, 0($c11)
+	clearlo 0xfffb
+	clearhi 0xffff
+	cclearlo 0xfff8
+	cclearhi 0xffff
+	ccall $c1, $c2, 1
 	.set	at
 	.set	macro
 	.set	reorder
@@ -51,7 +55,8 @@ factorial:                              # @factorial
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 192
-	ucsc	$c11, $c17, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c2, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c1, -1($c11)  # 32-byte Folded Spill
 	.cfi_offset 89, -32
 	lui	$1, %pcrel_hi(_CHERI_CAPABILITY_TABLE_-8)
 	daddiu	$1, $1, %pcrel_lo(_CHERI_CAPABILITY_TABLE_-4)
@@ -95,14 +100,39 @@ factorial:                              # @factorial
 	clc	$c3, $zero, 64($c11)    # 32-byte Folded Reload
 	clcbi	$c12, %capcall20(product)($c3)
 	cgetnull	$c13
+
+	# Load seal capability 
+	cgetdefault $c13 
+	cmove $c4, $c13
+	cincoffset $c4, $c4, 1
+	cgetlen $t2, $c4
+	cgetaddr $t3, $c4
+	sub $t2, $t2, $t3
+	csetbounds $c4, $c4, $t2
+	# Store modified seal capability 
+	csetdefault $c4
+
 	# CC: pre call
-	cmove $c21, $c11
+	cseal $c2, $c11, $c13
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
-	cjalr	$c12, $c17
+
+	li $t2, 28
+	cgetpccincoffset $c17, $t2 
+	cseal $c1, $c17, $c13
+
+	# Clear registers
+	clearlo 0xffcf
+	clearhi 0xffff
+	cclearlo 0xe7f8
+	cclearhi 0xffff
+
+	# Jump to function
+	cjr $c12
 	nop
+
 	# CC: post call
-	cmove $c11, $c21
+	cmove $c11, $idc
 	clc	$c1, $zero, 32($c11)    # 32-byte Folded Reload
 	ucsw	$c1, $2, 0($c1)
 	b	.LBB1_4
@@ -118,9 +148,22 @@ factorial:                              # @factorial
 .LBB1_5:                                # %for.end
 	clc	$c1, $zero, 32($c11)    # 32-byte Folded Reload
 	clw	$2, $zero, 0($c1)
-	clc	$c17, $zero, 128($c11)  # 32-byte Folded Reload
-	cjr	$c17
-	nop
+	clc	$c1, $zero, 128($c11)  # 32-byte Folded Reload
+	clc	$c2, $zero, 160($c11)  # 32-byte Folded Reload
+	ucsc $c11, $cnull, 5($c11)
+	ucsc $c11, $cnull, 4($c11)
+	ucsd $c11, $zero, 15($c11)
+	ucsd $c11, $zero, 14($c11)
+	ucsd $c11, $zero, 13($c11)
+	ucsd $c11, $zero, 12($c11)
+	ucsc $c11, $cnull, 2($c11)
+	ucsc $c11, $cnull, 1($c11)
+	ucsc $c11, $cnull, 0($c11)
+	clearlo 0xfffb
+	clearhi 0xffff
+	cclearlo 0xfff8
+	cclearhi 0xffff
+	ccall $c1, $c2, 1
 	.set	at
 	.set	macro
 	.set	reorder
@@ -145,6 +188,8 @@ sum:                                    # @sum
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 224
+	ucsc $c11, $c2, -1($c11)
+	ucsc $c11, $c1, -1($c11)
                                         # kill: def $a0 killed $a0 killed $a0_64
 	ucsc	$c11, $c3, -1($c11)
 	csetbounds $c1, $c11, 32
@@ -202,10 +247,26 @@ sum:                                    # @sum
 	b	.LBB2_1
 	nop
 .LBB2_5:                                # %for.end
-	clc	$c1, $zero, 32($c11)    # 32-byte Folded Reload
-	clw	$2, $zero, 0($c1)
-	cjr	$c17
-	nop
+	clc	$c3, $zero, 32($c11)    # 32-byte Folded Reload
+	clw	$2, $zero, 0($c3)
+	clc $c1, $zero, 192($c11)
+	clc $c2, $zero, 224($c11)
+	ucsc $c11, $cnull, 7($c11)
+	ucsc $c11, $cnull, 6($c11)
+	ucsd $c11, $zero, 23($c11)
+	ucsd $c11, $zero, 22($c11)
+	ucsd $c11, $zero, 21($c11)
+	ucsd $c11, $zero, 20($c11)
+	ucsc $c11, $cnull, 4($c11)
+	ucsc $c11, $cnull, 3($c11)
+	ucsc $c11, $cnull, 2($c11)
+	ucsc $c11, $cnull, 1($c11)
+	ucsc $c11, $cnull, 0($c11)
+	clearlo 0xfffb
+	clearhi 0xffff
+	cclearlo 0xfff8
+	cclearhi 0xffff
+	ccall $c1, $c2, 1
 	.set	at
 	.set	macro
 	.set	reorder
@@ -230,7 +291,8 @@ sumFactorials:                          # @sumFactorials
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 224
-	ucsc	$c11, $c17, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c2, -1($c11)  # 32-byte Folded Spill
+	ucsc	$c11, $c1, -1($c11)  # 32-byte Folded Spill
 	.cfi_offset 89, -32
 	lui	$1, %pcrel_hi(_CHERI_CAPABILITY_TABLE_-8)
 	daddiu	$1, $1, %pcrel_lo(_CHERI_CAPABILITY_TABLE_-4)
@@ -278,14 +340,40 @@ sumFactorials:                          # @sumFactorials
 	clc	$c2, $zero, 96($c11)   # 32-byte Folded Reload
 	clcbi	$c12, %capcall20(factorial)($c2)
 	cgetnull	$c13
+
+	# Load seal capability 
+	cgetdefault $c13 
+	cmove $c4, $c13
+	cincoffset $c4, $c4, 1
+	cgetlen $t2, $c4
+	cgetaddr $t3, $c4
+	sub $t2, $t2, $t3
+	csetbounds $c4, $c4, $t2
+	# Store modified seal capability 
+	csetdefault $c4
+
 	# CC: pre call
-	cmove $c19, $c11
+	cseal $c2, $c11, $c13
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
-	cjalr	$c12, $c17
+
+	li $t2, 28
+	cgetpccincoffset $c17, $t2 
+	cseal $c1, $c17, $c13
+
+	# Clear registers
+	clearlo 0xffef
+	clearhi 0xffff
+	cclearlo 0xe7f8
+	cclearhi 0xffff
+
+	# Jump to function
+	cjr $c12
 	nop
+
 	# CC: post call
-	cmove $c11, $c19
+	cmove $c11, $idc
+
 	clc	$c1, $zero, 0($c11)    # 32-byte Folded Reload
 	clw	$1, $zero, 0($c1)
 	dsll	$1, $1, 2
@@ -309,18 +397,58 @@ sumFactorials:                          # @sumFactorials
 	clcbi	$c12, %capcall20(sum)($c2)
 	clc	$c3, $zero, 32($c11)    # 32-byte Folded Reload
 	cgetnull	$c13
+
+	# Load seal capability 
+	cgetdefault $c13 
+	cmove $c4, $c13
+	cincoffset $c4, $c4, 1
+	cgetlen $t2, $c4
+	cgetaddr $t3, $c4
+	sub $t2, $t2, $t3
+	csetbounds $c4, $c4, $t2
+	# Store modified seal capability 
+	csetdefault $c4
+
 	# CC: pre call
-	cmove $c20, $c11
+	cseal $c2, $c11, $c13
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
-	cjalr	$c12, $c17
+
+	li $t2, 28
+	cgetpccincoffset $c17, $t2 
+	cseal $c1, $c17, $c13
+
+	# Clear registers
+	clearlo 0xffef
+	clearhi 0xffff
+	cclearlo 0xe7f0
+	cclearhi 0xffff
+
+	# Jump to function
+	cjr $c12
 	nop
+
 	# CC: post call
-	cmove $c11, $c20
+	cmove $c11, $idc
+
 	sll	$2, $2, 0
-	clc	$c17, $zero, 160($c11)  # 32-byte Folded Reload
-	cjr	$c17
-	nop
+	clc	$c1, $zero, 160($c11)  # 32-byte Folded Reload
+	clc	$c2, $zero, 192($c11)  # 32-byte Folded Reload
+	ucsc $c11, $cnull, 6($c11)
+	ucsc $c11, $cnull, 5($c11)
+	ucsd $c11, $zero, 19($c11)
+	ucsd $c11, $zero, 18($c11)
+	ucsd $c11, $zero, 17($c11)
+	ucsd $c11, $zero, 16($c11)
+	ucsc $c11, $cnull, 3($c11)
+	ucsc $c11, $cnull, 2($c11)
+	ucsc $c11, $cnull, 1($c11)
+	ucsc $c11, $cnull, 0($c11)
+	clearlo 0xfffb
+	clearhi 0xffff
+	cclearlo 0xfff8
+	cclearhi 0xffff
+	ccall $c1, $c2, 1
 	.set	at
 	.set	macro
 	.set	reorder
@@ -359,16 +487,38 @@ test:                                   # @test
 	cgetnull	$c13
 	csw	$2, $zero, 24($c11)     # 4-byte Folded Spill
 
+	# Load seal capability 
+	cgetdefault $c13 
+	cmove $c3, $c13
+	cincoffset $c3, $c3, 1
+	cgetlen $t2, $c3
+	cgetaddr $t3, $c3
+	sub $t2, $t2, $t3
+	csetbounds $c3, $c3, $t2
+	# Store modified seal capability 
+	csetdefault $c3
+
 	# CC: pre call
-	cmove $c18, $c11
+	cseal $c2, $c11, $c13
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
-	
-	cjalr	$c12, $c17
+
+	li $t2, 28
+	cgetpccincoffset $c17, $t2 
+	cseal $c1, $c17, $c13
+
+	# Clear registers
+	clearlo 0xffff
+	clearhi 0xffff
+	cclearlo 0xe7f8
+	cclearhi 0xffff
+
+	# Jump to function
+	cjr $c12
 	nop
 
 	# CC: post call
-	cmove $c11, $c18
+	cmove $c11, $idc
 
 	sll	$2, $2, 0
 	clc	$c17, $zero, 32($c11)   # 32-byte Folded Reload

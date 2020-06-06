@@ -94,9 +94,19 @@ f:                                      # @f
 	cmove $c11, $idc
 
 	sll	$2, $2, 0
-	cincoffset $c11, $c11, 8
-	clc	$c1, $zero, 32($c11)   # 32-byte Folded Reload
-	clc	$c2, $zero, 0($c11)   # 32-byte Folded Reload
+	cincoffset $c12, $c11, 8
+	clc	$c1, $zero, 32($c12)   # 32-byte Folded Reload
+	clc	$c2, $zero, 0($c12)   # 32-byte Folded Reload
+
+	ucsd $c11, $zero, 8($c11)
+	ucsd $c11, $zero, 7($c11)
+	ucsd $c11, $zero, 6($c11)
+	ucsd $c11, $zero, 5($c11)
+	ucsd $c11, $zero, 4($c11)
+	ucsd $c11, $zero, 3($c11)
+	ucsd $c11, $zero, 2($c11)
+	ucsd $c11, $zero, 1($c11)
+	ucsd $c11, $zero, 0($c11)
 
 	clearlo 0xfffb
 	clearhi 0xffff

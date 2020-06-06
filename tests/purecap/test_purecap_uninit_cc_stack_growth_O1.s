@@ -65,6 +65,10 @@ f:                                      # @f
 	csetbounds	$c3, $c3, 4
 	csetbounds	$c4, $c11, 4
 
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+
 	# Load seal capability 
 	cgetdefault $c13 
 	cmove $c5, $c13
@@ -94,10 +98,12 @@ f:                                      # @f
 	cmove $c11, $idc
 
 	sll	$2, $2, 0
-	cincoffset $c12, $c11, 8
-	clc	$c1, $zero, 32($c12)   # 32-byte Folded Reload
-	clc	$c2, $zero, 0($c12)   # 32-byte Folded Reload
+	clc	$c1, $zero, 64($c11)   # 32-byte Folded Reload
+	clc	$c2, $zero, 32($c11)   # 32-byte Folded Reload
 
+	ucsd $c11, $zero, 11($c11)
+	ucsd $c11, $zero, 10($c11)
+	ucsd $c11, $zero, 9($c11)
 	ucsd $c11, $zero, 8($c11)
 	ucsd $c11, $zero, 7($c11)
 	ucsd $c11, $zero, 6($c11)

@@ -31,7 +31,6 @@ doSomething:                            # @doSomething
 
 	# Clear stack frame 
 	ucsw $c11, $zero, 0($c11)
-	cincoffset $c11, $c11, 4
 
 	# Clear registers
 	clearlo 0b1110111111101011

@@ -88,12 +88,9 @@ f:                                      # @f
 	csetbounds $c3, $c11, 4 # $c3 = &x
 
 	clcbi	$c12, %capcall20(g)($c1)
-	ucsw $c11, $zero, -1($c11)
-	ucsw $c11, $zero, -1($c11)
-	ucsw $c11, $zero, -1($c11)
-	ucsw $c11, $zero, -1($c11)
-	ucsw $c11, $zero, -1($c11)
-	ucsw $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
+	ucsd $c11, $zero, -1($c11)
 	ucsc $c11, $c3, -1($c11)
 
 	cmove	$c3, $c2 # $c3 = &a

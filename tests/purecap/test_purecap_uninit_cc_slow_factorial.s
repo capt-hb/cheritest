@@ -195,7 +195,7 @@ factorial:                              # @factorial
 	.ent	sum
 sum:                                    # @sum
 	.cfi_startproc
-	.frame	$c11,224,$c17
+	.frame	$c11,256,$c17
 	.mask 	0x00000000,0
 	.fmask	0x00000000,0
 	.set	noreorder

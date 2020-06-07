@@ -56,7 +56,7 @@ doSomething:                            # @doSomething
 	.ent	test
 test:                                   # @test
 	.cfi_startproc
-	.frame	$c11,160,$c17
+	.frame	$c11,128,$c17
 	.mask 	0x00000000,0
 	.fmask	0x00000000,0
 	.set	noreorder

@@ -43,7 +43,7 @@ g:                                      # @g
 	.ent	f
 f:                                      # @f
 	.cfi_startproc
-	.frame	$c11,64,$c17
+	.frame	$c11,96,$c17
 	.mask 	0x00000000,0
 	.fmask	0x00000000,0
 	.set	noreorder
@@ -136,7 +136,7 @@ f:                                      # @f
 	.ent	tmp
 tmp:                                    # @tmp
 	.cfi_startproc
-	.frame	$c11,0,$c17
+	.frame	$c11,32,$c17
 	.mask 	0x00000000,0
 	.fmask	0x00000000,0
 	.set	noreorder
@@ -175,7 +175,7 @@ tmp:                                    # @tmp
 	.ent	cap_tmp
 cap_tmp:                                # @cap_tmp
 	.cfi_startproc
-	.frame	$c11,0,$c17
+	.frame	$c11,64,$c17
 	.mask 	0x00000000,0
 	.fmask	0x00000000,0
 	.set	noreorder

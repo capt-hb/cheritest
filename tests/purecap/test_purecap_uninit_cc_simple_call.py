@@ -1,6 +1,6 @@
 from beritest_tools import BaseBERITestCase
 
-class test_purecap_uninit_calling_convention(BaseBERITestCase):
+class test_purecap_uninit_cc_simple_call(BaseBERITestCase):
     def test_first_argument_register_contains_100(self):
         assert self.MIPS.a0 == 100
 

@@ -105,8 +105,10 @@ test:                                   # @test
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
-	li $t2, 28
+	li $t2, 32
+	li $t1, 0xfffffffe 
 	cgetpccincoffset $c17, $t2 
+	candperm $c17, $c17, $t1
 	cseal $c1, $c17, $c13
 
 	# Clear registers

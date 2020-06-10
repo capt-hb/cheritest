@@ -112,9 +112,11 @@ f:                                      # @f
 	cseal $c2, $c11, $c13    # Seal old stack capability
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
-	dli $s1, 28
-	cgetpccincoffset $c17, $s1 
-	cseal $c1, $c17, $c13 # Seal return capability
+	li $s2, 32
+	li $s1, 0xfffffffe 
+	cgetpccincoffset $c17, $s2 
+	candperm $c17, $c17, $s1
+	cseal $c1, $c17, $c13
 	clearlo 0x1ffb
 	clearhi 0xffff
 	cclearlo 0xe7e0
@@ -688,9 +690,11 @@ test:                                   # @test
 	ucsd $c11, $1, -1($c11)
 	ucsd $c11, $2, -1($c11)
 
-	dli $s1, 28
-	cgetpccincoffset $c17, $s1
-	cseal $c1, $c17, $c13 
+	li $s2, 32
+	li $s1, 0xfffffffe 
+	cgetpccincoffset $c17, $s2 
+	candperm $c17, $c17, $s1
+	cseal $c1, $c17, $c13
 	clearlo 0xe00f
 	clearhi 0xffff
 	cclearlo 0xc7f8
@@ -736,8 +740,10 @@ test:                                   # @test
 	cuninit $c11, $c11
 	ucsc	$c11, $c15, -1($c11)
 	ucsc	$c11, $c13, -1($c11)
-	dli $s1, 28
-	cgetpccincoffset $c17, $s1
+	li $s2, 32
+	li $s1, 0xfffffffe 
+	cgetpccincoffset $c17, $s2 
+	candperm $c17, $c17, $s1
 	cseal $c1, $c17, $c14
 	clearlo 0x1fef
 	clearhi 0xffff
@@ -791,8 +797,10 @@ test:                                   # @test
 	cseal $c2, $c11, $c14
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
-	dli $s1, 28
-	cgetpccincoffset $c17, $s1
+	li $s2, 32
+	li $s1, 0xfffffffe 
+	cgetpccincoffset $c17, $s2 
+	candperm $c17, $c17, $s1
 	cseal $c1, $c17, $c14
 	clearlo 0x1c0f
 	clearhi 0xff00
@@ -830,9 +838,11 @@ test:                                   # @test
 	cseal $c2, $c11, $c13    
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
-	dli $s1, 28
-	cgetpccincoffset $c17, $s1
-	cseal $c1, $c17, $c13 
+	li $s2, 32
+	li $s1, 0xfffffffe 
+	cgetpccincoffset $c17, $s2 
+	candperm $c17, $c17, $s1
+	cseal $c1, $c17, $c13
 	clearlo 0x1fef
 	clearhi 0xffff
 	cclearlo 0xe7f8

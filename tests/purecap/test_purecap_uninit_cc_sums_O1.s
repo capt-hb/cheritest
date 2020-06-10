@@ -194,8 +194,10 @@ subtract_sums:                          # @subtract_sums
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
-	li $t2, 28
+	li $t2, 32
+	li $t1, 0xfffffffe 
 	cgetpccincoffset $c17, $t2 
+	candperm $c17, $c17, $t1
 	cseal $c1, $c17, $c13
 
 	# Clear registers
@@ -233,8 +235,10 @@ subtract_sums:                          # @subtract_sums
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
-	li $t2, 28
+	li $t2, 32
+	li $t1, 0xfffffffe 
 	cgetpccincoffset $c17, $t2 
+	candperm $c17, $c17, $t1
 	cseal $c1, $c17, $c13
 
 	# Clear registers
@@ -273,15 +277,15 @@ subtract_sums:                          # @subtract_sums
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
-	li $t2, 28
+	li $t2, 32
+	li $t1, 0xfffffffe 
 	cgetpccincoffset $c17, $t2 
+	candperm $c17, $c17, $t1
 	cseal $c1, $c17, $c13
 
 	# Clear registers
-	#clearlo 0xffef
-	#clearhi 0xfff0
-	nop
-	nop
+	clearlo 0xffef
+	clearhi 0xffff
 	cclearlo 0xe7f0
 	cclearhi 0xffff
 
@@ -345,6 +349,10 @@ test:                                   # @test
 	.set	noat
 # %bb.0:                                # %entry
 	cincoffset	$c11, $c11, -32
+	li $t1, 0xfffffffe # permissions to make capability local
+	candperm $c11, $c11, $t1 
+	cgetdefault $c13 
+	candperm $c13, $c13, $t1 
 	.cfi_def_cfa_offset 32
 	csc	$c17, $zero, 0($c11)    # 32-byte Folded Spill
 	.cfi_offset 89, -32
@@ -369,8 +377,10 @@ test:                                   # @test
 	cshrink $c11, $c11, 0
 	cuninit $c11, $c11
 
-	li $t2, 28
+	li $t2, 32
+	li $t1, 0xfffffffe 
 	cgetpccincoffset $c17, $t2 
+	candperm $c17, $c17, $t1
 	cseal $c1, $c17, $c13
 
 	# Clear registers

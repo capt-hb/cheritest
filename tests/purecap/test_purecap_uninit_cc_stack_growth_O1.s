@@ -19,6 +19,12 @@ g:                                      # @g
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	clw	$1, $zero, 0($c3)
 	clw	$2, $zero, 0($c4)
 	addu	$2, $2, $1
@@ -51,6 +57,12 @@ f:                                      # @f
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 64
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	ucsc	$c11, $c1, -1($c11)   # 32-byte Folded Spill
 	ucsc	$c11, $c2, -1($c11)   # 32-byte Folded Spill
 	.cfi_offset 89, -32
@@ -145,6 +157,12 @@ tmp:                                    # @tmp
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	cld	$1, $zero, 8($c11)
 	cld	$2, $zero, 0($c11)
 	addu	$3, $5, $4
@@ -183,6 +201,12 @@ cap_tmp:                                # @cap_tmp
 	.set	noreorder
 	.set	nomacro
 	.set	noat
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 # %bb.0:                                # %entry
 	clc	$c13, $zero, 32($c11)
 	clc	$c14, $zero, 0($c11)
@@ -233,6 +257,12 @@ mixed_tmp:                              # @mixed_tmp
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	clw	$1, $zero, 0($c3)
 	clw	$2, $zero, 0($c4)
 	clw	$3, $zero, 0($c5)

@@ -23,6 +23,11 @@ doSomething:                            # @doSomething
 	.set	noat
 # %bb.0:                                # %entry
 	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	.cfi_def_cfa_offset 32
                                         # kill: def $a0 killed $a0 killed $a0_64
 	ucsw	$c11, $4, -1($c11)

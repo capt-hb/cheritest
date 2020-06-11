@@ -12,6 +12,12 @@ integers:                               # @integers
 	.set	noreorder
 	.set	nomacro
 	.set	noat
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 # %bb.0:                                # %entry
 	blez	$4, .LBB0_3
 	nop
@@ -55,6 +61,12 @@ sum:                                    # @sum
 	.set	noreorder
 	.set	nomacro
 	.set	noat
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 # %bb.0:                                # %entry
 	blez	$4, .LBB1_4
 	nop
@@ -106,6 +118,12 @@ backwards_sum:                          # @backwards_sum
 	.set	noreorder
 	.set	nomacro
 	.set	noat
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 # %bb.0:                                # %entry
 	dsll	$1, $4, 2
 	cincoffset	$c4, $c3, $1
@@ -153,6 +171,12 @@ subtract_sums:                          # @subtract_sums
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 160
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	ucsc	$c11, $c2, -1($c11)   # 32-byte Folded Spill
 	ucsc	$c11, $c1, -1($c11)   # 32-byte Folded Spill
 	.cfi_offset 16, -8

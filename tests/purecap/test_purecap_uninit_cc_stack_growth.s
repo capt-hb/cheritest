@@ -23,6 +23,12 @@ g:                                      # @g
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 96
+	cgetuninit $s0, $c11
+	cgetperm $s1, $c11
+	not $s1, $s1
+	andi $s1, $s1, 1
+	and $s1, $s1, $s0
+	teq $s1, $zero
 	ucsc $c11, $c3, -1($c11)
 	csetbounds	$c13, $c11, 32
 	ucsc $c11, $c4, -1($c11)
@@ -72,6 +78,12 @@ f:                                      # @f
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 128
+	cgetuninit $s0, $c11
+	cgetperm $s1, $c11
+	not $s1, $s1
+	andi $s1, $s1, 1
+	and $s1, $s1, $s0
+	teq $s1, $zero
 	ucsc	$c11, $c1, -1($c11)   # 32-byte Folded Spill
 	ucsc	$c11, $c2, -1($c11)   # 32-byte Folded Spill
 	.cfi_offset 89, -32
@@ -176,14 +188,20 @@ tmp:                                    # @tmp
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 64
+	cgetuninit $s0, $c11
+	cgetperm $s1, $c11
+	not $s1, $s1
+	andi $s1, $s1, 1
+	and $s1, $s1, $s0
+	teq $s1, $zero
 	cld	$1, $zero, 8($c11)
                                         # kill: def $at killed $at killed $at_64
 	cld	$2, $zero, 0($c11)
                                         # kill: def $v0 killed $v0 killed $v0_64
                                         # kill: def $t3 killed $t3 killed $t3_64
                                         # kill: def $t2 killed $t2 killed $t2_64
-                                        # kill: def $t1 killed $t1 killed $t1_64
-                                        # kill: def $t0 killed $t0 killed $t0_64
+                                        # kill: def $s1 killed $s1 killed $s1_64
+                                        # kill: def $s0 killed $s0 killed $s0_64
                                         # kill: def $a3 killed $a3 killed $a3_64
                                         # kill: def $a2 killed $a2 killed $a2_64
                                         # kill: def $a1 killed $a1 killed $a1_64
@@ -268,6 +286,12 @@ cap_tmp:                                # @cap_tmp
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 512
+	cgetuninit $s0, $c11
+	cgetperm $s1, $c11
+	not $s1, $s1
+	andi $s1, $s1, 1
+	and $s1, $s1, $s0
+	teq $s1, $zero
 	ucsc $c11, $c2, -1($c11)
 	ucsc $c11, $c1, -1($c11)
 	.cfi_offset 93, -32
@@ -412,13 +436,19 @@ mixed_tmp:                              # @mixed_tmp
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 512
+	cgetuninit $s0, $c11
+	cgetperm $s1, $c11
+	not $s1, $s1
+	andi $s1, $s1, 1
+	and $s1, $s1, $s0
+	teq $s1, $zero
 	ucsc	$c11, $c2, -1($c11)  # 32-byte Folded Spill
 	ucsc	$c11, $c1, -1($c11)  # 32-byte Folded Spill
 	.cfi_offset 91, -32
 	.cfi_offset 90, -64
 	.cfi_offset 89, -96
-                                        # kill: def $t1 killed $t1 killed $t1_64
-                                        # kill: def $t0 killed $t0 killed $t0_64
+                                        # kill: def $s1 killed $s1 killed $s1_64
+                                        # kill: def $s0 killed $s0 killed $s0_64
                                         # kill: def $a3 killed $a3 killed $a3_64
                                         # kill: def $a2 killed $a2 killed $a2_64
                                         # kill: def $a1 killed $a1 killed $a1_64
@@ -584,10 +614,10 @@ test:                                   # @test
 	.set	noat
 # %bb.0:                                # %entry
 	cincoffset	$c11, $c11, -576
-	li $t1, 0xfffffffe # permissions to make capability local
-	candperm $c11, $c11, $t1 
+	li $s1, 0xfffffffe # permissions to make capability local
+	candperm $c11, $c11, $s1 
 	cgetdefault $c13 
-	candperm $c13, $c13, $t1 
+	candperm $c13, $c13, $s1 
 	.cfi_def_cfa_offset 576
 	csc	$c17, $zero, 544($c11)  # 32-byte Folded Spill
 	.cfi_offset 89, -32
@@ -705,7 +735,7 @@ test:                                   # @test
 	# CC: post call
 	cmove $c11, $idc
 
-	# Test setup: store tmp call result in $13=$t1
+	# Test setup: store tmp call result in $13=$s1
 	move $13, $2
 
 	cld	$1, $zero, 112($c11)    # 8-byte Folded Reload

@@ -16,6 +16,12 @@ product:                                # @product
 	.cfi_def_cfa_offset 32
                                         # kill: def $a1 killed $a1 killed $a1_64
                                         # kill: def $a0 killed $a0 killed $a0_64
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	ucsw	$c11, $4, -1($c11)
 	csetbounds $c3, $c11, 4
 	ucsw	$c11, $5, -1($c11)
@@ -55,6 +61,12 @@ factorial:                              # @factorial
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 192
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	ucsc	$c11, $c2, -1($c11)  # 32-byte Folded Spill
 	ucsc	$c11, $c1, -1($c11)  # 32-byte Folded Spill
 	.cfi_offset 89, -32
@@ -205,6 +217,12 @@ sum:                                    # @sum
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 224
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	ucsc $c11, $c2, -1($c11)
 	ucsc $c11, $c1, -1($c11)
                                         # kill: def $a0 killed $a0 killed $a0_64
@@ -329,6 +347,12 @@ sumFactorials:                          # @sumFactorials
 	.set	noat
 # %bb.0:                                # %entry
 	.cfi_def_cfa_offset 224
+	cgetuninit $t0, $c11
+	cgetperm $t1, $c11
+	not $t1, $t1
+	andi $t1, $t1, 1
+	and $t1, $t1, $t0
+	teq $t1, $zero
 	ucsc	$c11, $c2, -1($c11)  # 32-byte Folded Spill
 	ucsc	$c11, $c1, -1($c11)  # 32-byte Folded Spill
 	.cfi_offset 89, -32

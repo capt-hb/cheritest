@@ -1,6 +1,6 @@
 from beritest_tools import BaseBERITestCase
 
-class test_uninit_cap_csetoffset(BaseBERITestCase):
+class test_uninit_cap_offset(BaseBERITestCase):
     EXPECTED_EXCEPTIONS = 1
 
     def test_offset_correctly_updated_after_store(self):

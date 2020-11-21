@@ -43,7 +43,7 @@ g:                                      # @g
 	.ent	f
 f:                                      # @f
 	.cfi_startproc
-	.frame	$c11,96,$c17
+	.frame	$c11,64,$c17
 	.mask 	0x00000000,0
 	.fmask	0x00000000,0
 	.set	noreorder
@@ -98,13 +98,9 @@ f:                                      # @f
 	cmove $c11, $idc
 
 	sll	$2, $2, 0
-	clc	$c1, $zero, 64($c11)   # 32-byte Folded Reload
+	clc	$c1, $zero, 48($c11)   # 32-byte Folded Reload
 	clc	$c2, $zero, 32($c11)   # 32-byte Folded Reload
 
-	ucsd $c11, $zero, 11($c11)
-	ucsd $c11, $zero, 10($c11)
-	ucsd $c11, $zero, 9($c11)
-	ucsd $c11, $zero, 8($c11)
 	ucsd $c11, $zero, 7($c11)
 	ucsd $c11, $zero, 6($c11)
 	ucsd $c11, $zero, 5($c11)
@@ -175,14 +171,14 @@ tmp:                                    # @tmp
 	.ent	cap_tmp
 cap_tmp:                                # @cap_tmp
 	.cfi_startproc
-	.frame	$c11,64,$c17
+	.frame	$c11,32,$c17
 	.mask 	0x00000000,0
 	.fmask	0x00000000,0
 	.set	noreorder
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
-	clc	$c13, $zero, 32($c11)
+	clc	$c13, $zero, 16($c11)
 	clc	$c14, $zero, 0($c11)
 	clw	$1, $zero, 0($c3)
 	clw	$2, $zero, 0($c4)
@@ -273,7 +269,7 @@ test:                                   # @test
 	.set	nomacro
 	.set	noat
 # %bb.0:                                # %entry
-	cincoffset	$c11, $c11, -32
+	cincoffset	$c11, $c11, -16
 
 	li $t1, 0xfffffffe # permissions to make capability local
 	candperm $c11, $c11, $t1 
@@ -320,7 +316,7 @@ test:                                   # @test
 	sll	$2, $2, 0
 	clc	$c17, $zero, 0($c11)    # 32-byte Folded Reload
 	cjr	$c17
-	cincoffset	$c11, $c11, 32
+	cincoffset	$c11, $c11, 16
 	.set	at
 	.set	macro
 	.set	reorder

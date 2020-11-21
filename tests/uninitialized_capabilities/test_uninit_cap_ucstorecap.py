@@ -1,3 +1,4 @@
+import os
 from beritest_tools import BaseBERITestCase
 
 class test_uninit_cap_ucstorecap(BaseBERITestCase):
@@ -10,4 +11,4 @@ class test_uninit_cap_ucstorecap(BaseBERITestCase):
         assert self.MIPS.a2 == 80 
         assert self.MIPS.a3 == 80 
         assert self.MIPS.a4 == 80 
-        assert self.MIPS.s1 == 32
+        assert self.MIPS.s1 == int(os.environ['CAP_SIZE']) / 8
